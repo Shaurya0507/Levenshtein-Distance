@@ -1,3 +1,6 @@
+# ==========================================================
+# Imports
+# ==========================================================
 import math
 import time
 import numpy as np
@@ -5,10 +8,14 @@ import matplotlib.pyplot as plt
 from IPython.display import HTML, display
 from matplotlib.animation import FuncAnimation
 
+
+# ==========================================================
+# Levenshtein Distance
+# ==========================================================
 def levenshteindistance(a, b):
     m = len(a)
     n = len(b)
-    dp = np.zeros((m+1, n+1), dtype = int)
+    dp = np.zeros((m+1, n+1), dtype=int)
     for i in range(m+1):
         dp[i, 0] = i
     for j in range(n+1):
@@ -18,17 +25,22 @@ def levenshteindistance(a, b):
             if a[i-1] == b[j-1]:
                 cost = 0
             else:
-                cost = 1            
+                cost = 1
             dp[i, j] = min(
-                dp[i-1, j] + 1,        
-                dp[i, j-1] + 1,        
-                dp[i-1, j-1] + cost    
+                dp[i-1, j] + 1,
+                dp[i, j-1] + 1,
+                dp[i-1, j-1] + cost
             )
     return dp[m, n]
+
 
 print(levenshteindistance("kitten", "sitting"))  
 print(levenshteindistance("flaw", "lawn"))       
 
+
+# ==========================================================
+# Levenshtein Path
+# ==========================================================
 def levenshteinpath(a, b):
     m = len(a) 
     n = len(b)
@@ -68,11 +80,16 @@ def levenshteinpath(a, b):
     x.reverse()
     return dp, x
 
+
 dp, x = levenshteinpath("kitten", "sitting")
 print("Distance:", dp[-1, -1])
 for o in x:
     print(o)
 
+
+# ==========================================================
+# Visualization
+# ==========================================================
 def backtrack(dp: np.ndarray):
     i = dp.shape[0]-1
     j = dp.shape[1]-1
@@ -83,24 +100,19 @@ def backtrack(dp: np.ndarray):
         if j > 0: c.append((dp[i, j-1], i, j-1))
         if i > 0 and j > 0: c.append((dp[i-1, j-1], i-1, j-1))
         val = dp[i, j]
-        prev = min(c, key = lambda x: x[0])
-        pv, pi, pj = prev
-        if pv + 1 == val or pv == val:
-            i, j = pi, pj
-        else:
-            i, j = pi, pj
+        prev = min(c, key=lambda x: x[0])
+        i, j = prev[1], prev[2]
         x.append((i, j))
     return x
 
 def showdp(a, b):
     dp, _ = levenshteinpath(a, b)
     x = set(backtrack(dp))
-    fig, ax = plt.subplots(figsize = (6,4))
+    fig, ax = plt.subplots(figsize=(6,4))
     im = ax.imshow(dp, origin="upper")
     ax.set_title(f"Levenshtein DP for '{a}' → '{b}' (distance={dp[-1,-1]})")
     ax.set_xlabel("j (len of b prefix)")
     ax.set_ylabel("i (len of a prefix)")
-
     for i in range(dp.shape[0]):
         for j in range(dp.shape[1]):
             txt = ax.text(j, i, dp[i, j], ha="center", va="center",
@@ -109,8 +121,13 @@ def showdp(a, b):
     ax.scatter(xs, ys, s=20, marker="s", facecolors="none", edgecolors="yellow", linewidths=1.5)
     plt.show()
 
+
 showdp("kitten", "sitting")
 
+
+# ==========================================================
+# Performance Benchmark
+# ==========================================================
 tests = [
     ("kitten", "sitting"),
     ("intention", "execution"),
@@ -127,10 +144,12 @@ def timerun(a, b, runs=3):
         best = min(best, (time.perf_counter() - t0))
     return d, best*1000
 
+
 rows = []
 for (x, y) in tests:
     d, ms = timerun(x, y)
     rows.append((x, y, d, f"{ms:.2f} ms"))
 
 for r in rows:
+    print(r)for r in rows:
     print(r)
