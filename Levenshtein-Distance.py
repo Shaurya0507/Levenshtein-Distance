@@ -1,6 +1,4 @@
-# ==========================================================
 # Imports
-# ==========================================================
 import math
 import time
 import numpy as np
@@ -9,9 +7,7 @@ from IPython.display import HTML, display
 from matplotlib.animation import FuncAnimation
 
 
-# ==========================================================
 # Levenshtein Distance
-# ==========================================================
 def levenshteindistance(a, b):
     m = len(a)
     n = len(b)
@@ -38,9 +34,7 @@ print(levenshteindistance("kitten", "sitting"))
 print(levenshteindistance("flaw", "lawn"))       
 
 
-# ==========================================================
 # Levenshtein Path
-# ==========================================================
 def levenshteinpath(a, b):
     m = len(a) 
     n = len(b)
@@ -87,9 +81,7 @@ for o in x:
     print(o)
 
 
-# ==========================================================
 # Visualization
-# ==========================================================
 def backtrack(dp: np.ndarray):
     i = dp.shape[0]-1
     j = dp.shape[1]-1
@@ -125,9 +117,7 @@ def showdp(a, b):
 showdp("kitten", "sitting")
 
 
-# ==========================================================
 # Performance Benchmark
-# ==========================================================
 tests = [
     ("kitten", "sitting"),
     ("intention", "execution"),
